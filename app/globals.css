@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-clay-200 text-ink-900;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Consistent focus ring for accessibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-clay-500 ring-offset-2 ring-offset-cream rounded-sm;
+  }
+}
+
+@layer components {
+  /* Section vertical rhythm — consistent everywhere for a balanced feel */
+  .section {
+    @apply py-16 md:py-24;
+  }
+  .section-sm {
+    @apply py-12 md:py-16;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-clay-600;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 py-3 text-sm font-semibold
+           transition-all duration-200 focus-visible:outline-none;
+  }
+  .btn-primary {
+    @apply btn bg-clay-500 text-white shadow-soft hover:bg-clay-600 hover:shadow-card active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply btn bg-ink-900 text-cream hover:bg-ink-800 active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply btn border border-ink-200 bg-transparent text-ink-900 hover:border-clay-500 hover:text-clay-600;
+  }
+  .btn-ghost-light {
+    @apply btn border border-white/30 bg-white/5 text-white hover:bg-white/15;
+  }
+
+  .link-underline {
+    @apply relative font-semibold text-clay-600 transition-colors hover:text-clay-700
+           after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left
+           after:scale-x-0 after:bg-current after:transition-transform hover:after:scale-x-100;
+  }
+
+  .card {
+    @apply rounded-3xl border border-ink-100 bg-white shadow-soft transition-all duration-300;
+  }
+  .card-hover {
+    @apply hover:-translate-y-1 hover:shadow-card hover:border-clay-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Gentle entrance fade — pure CSS, no JavaScript dependency.
+     The animation always ends at opacity:1, so content can never get stuck
+     hidden. Reduced-motion users see content immediately with no animation. */
+  .reveal {
+    animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      scroll-behavior: auto;
+    }
+    .reveal {
+      animation: none;
+    }
+  }
+}
