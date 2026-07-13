@@ -5,6 +5,7 @@ import { blogPosts } from '@/lib/blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
+import ClarionBlog from '@/components/ClarionBlog';
 
 export const metadata: Metadata = {
   title: 'Blog & Articles',
@@ -84,6 +85,22 @@ export default function BlogPage() {
                 </div>
               </Link>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Clarion's incoming posts render in their own section below — the
+          existing hand-authored posts above are untouched and stay crawlable. */}
+      <section className="section pt-0">
+        <Container>
+          <div className="max-w-2xl">
+            <span className="eyebrow">Fresh off the press</span>
+            <h2 className="mt-2 font-display text-2xl text-ink-900 md:text-3xl">
+              More from our team
+            </h2>
+          </div>
+          <div className="mt-10">
+            <ClarionBlog />
           </div>
         </Container>
       </section>

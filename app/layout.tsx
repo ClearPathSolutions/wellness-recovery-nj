@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
-import { site } from '@/lib/site';
+import { site, widgets } from '@/lib/site';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Clarion from '@/components/Clarion';
 
 const display = Fraunces({
   subsets: ['latin'],
@@ -77,6 +79,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
+        {/* Call-tracking pixel (tctm.co) — loads early to swap/track phone numbers */}
+        <Script src={widgets.callTracking.src} strategy="beforeInteractive" />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-900 focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-cream"
@@ -90,6 +94,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
         />
+        {/* Clarion chat widget + form-capture loader — mounted once, site-wide */}
+        <Clarion />
       </body>
     </html>
   );

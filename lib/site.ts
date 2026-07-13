@@ -28,6 +28,29 @@ export const site = {
   },
 } as const;
 
+// Third-party widget & tracking config — the only per-site values that change.
+// See the Clarion + Tracking playbook for the full setup.
+export const widgets = {
+  clarion: {
+    siteKey: 'cpx_gh-wYjucAl0Up0F29gqk3SU00A1p7qsQ', // 👈 only value that changes per site
+    api: 'https://api.clarionlabs.ai',
+    widget: 'https://www.clarionlabs.ai/widget.v1.js',
+    formsCapture: 'https://www.clarionlabs.ai/forms-capture.v1.js',
+    blogEmbed: 'https://www.clarionlabs.ai/blog-embed.v1.js',
+    // Form keys must exist in the Clarion dashboard.
+    formKeys: {
+      contact: 'contact',
+      insurance: 'insurance_verification',
+    },
+  },
+  // Call-tracking pixel (tctm.co — separate vendor). Swaps/tracks phone numbers.
+  callTracking: {
+    src: '//264810.tctm.co/t.js',
+  },
+} as const;
+
+export type ClarionFormKey = (typeof widgets.clarion.formKeys)[keyof typeof widgets.clarion.formKeys];
+
 export type NavChild = { label: string; href: string; description?: string };
 export type NavColumn = { heading: string; links: NavChild[] };
 export type NavItem = {

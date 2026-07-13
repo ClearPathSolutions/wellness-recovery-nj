@@ -2,6 +2,8 @@
 
 import { useState, FormEvent } from 'react';
 import { Icon } from './ui';
+import { widgets } from '@/lib/site';
+import { captureLead } from '@/lib/clarion';
 
 const fieldClass =
   'w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-clay-500';
@@ -31,8 +33,11 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
 
 export function InsuranceForm() {
   const [sent, setSent] = useState(false);
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    // Fire-and-forget capture — never blocks the user's submission.
+    await captureLead(widgets.clarion.formKeys.insurance, { ...data, variant: 'insurance' });
     setSent(true);
   };
   if (sent) return <SuccessCard onReset={() => setSent(false)} />;
@@ -89,8 +94,11 @@ export function InsuranceForm() {
 
 export function ContactForm() {
   const [sent, setSent] = useState(false);
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    // Fire-and-forget capture — never blocks the user's submission.
+    await captureLead(widgets.clarion.formKeys.contact, { ...data, variant: 'contact' });
     setSent(true);
   };
   if (sent) return <SuccessCard onReset={() => setSent(false)} />;
