@@ -2,16 +2,27 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { blogPosts, getPost } from '@/lib/blog';
+import { getPost } from '@/lib/blog';
+import { getClarionPost, getMergedPosts } from '@/lib/clarion-blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+export const revalidate = 600;
+
+// Pre-render local posts plus whatever Clarion currently has. Unknown slugs
+// (e.g. Clarion posts added after build) still render on demand via the
+// default dynamicParams behavior.
+export async function generateStaticParams() {
+  const slugs = new Set((await getMergedPosts()).map((p) => p.slug));
+  return [...slugs].map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const p = getPost(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const p = getPost(params.slug) ?? (await getClarionPost(params.slug));
   if (!p) return {};
   return {
     title: p.title,
@@ -20,11 +31,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getPost(params.slug);
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const post = getPost(params.slug) ?? (await getClarionPost(params.slug));
   if (!post) notFound();
 
-  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const related = (await getMergedPosts()).filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
     <>
@@ -72,11 +83,19 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       {/* Body */}
       <article className="section">
         <Container>
-          <div className="mx-auto max-w-prose space-y-6 text-lg leading-relaxed text-ink-700">
-            {post.body.map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
+          {post.bodyHtml ? (
+            // First-party HTML from the Clarion feed — styled via .article-html.
+            <div
+              className="article-html mx-auto max-w-prose"
+              dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
+            />
+          ) : (
+            <div className="mx-auto max-w-prose space-y-6 text-lg leading-relaxed text-ink-700">
+              {post.body.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+            </div>
+          )}
 
           <div className="mx-auto mt-12 flex max-w-prose flex-col items-start gap-4 rounded-3xl border border-clay-200 bg-clay-50 p-7 sm:flex-row sm:items-center sm:justify-between">
             <div>

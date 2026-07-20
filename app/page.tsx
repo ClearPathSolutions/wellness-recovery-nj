@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { site } from '@/lib/site';
 import { programs } from '@/lib/programs';
 import { addictions } from '@/lib/addictions';
-import { blogPosts } from '@/lib/blog';
+import { getMergedPosts } from '@/lib/clarion-blog';
 import {
   treatmentApproaches,
   whyChoose,
@@ -14,6 +14,8 @@ import {
 import { Container, SectionHeading, Icon } from '@/components/ui';
 import { InsuranceStrip, CtaBand, TrustRow } from '@/components/sections';
 import Reviews from '@/components/Reviews';
+
+export const revalidate = 600;
 
 export default function HomePage() {
   return (
@@ -516,7 +518,8 @@ function AccreditationsSection() {
 
 /* ---------------- Blog ---------------- */
 
-function BlogSection() {
+async function BlogSection() {
+  const recentPosts = (await getMergedPosts()).slice(0, 3);
   return (
     <section className="section bg-sand-50">
       <Container>
@@ -533,7 +536,7 @@ function BlogSection() {
           </Link>
         </div>
         <div className="reveal mt-12 grid gap-6 md:grid-cols-3">
-          {blogPosts.slice(0, 3).map((post) => (
+          {recentPosts.map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}

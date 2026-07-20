@@ -75,6 +75,37 @@
            after:scale-x-0 after:bg-current after:transition-transform hover:after:scale-x-100;
   }
 
+  /* Rendered HTML from the Clarion feed (body_html). Tailwind's base reset
+     strips default element styles, so restore article typography here to match
+     the local posts' look (max-w-prose, text-lg, ink-700). */
+  .article-html {
+    @apply text-lg leading-relaxed text-ink-700;
+  }
+  .article-html > * + * {
+    @apply mt-6;
+  }
+  .article-html h2 {
+    @apply mt-10 font-display text-2xl text-ink-900;
+  }
+  .article-html h3 {
+    @apply mt-8 font-display text-xl text-ink-900;
+  }
+  .article-html ul {
+    @apply list-disc space-y-2 pl-6;
+  }
+  .article-html ol {
+    @apply list-decimal space-y-2 pl-6;
+  }
+  .article-html a {
+    @apply font-semibold text-clay-600 underline underline-offset-2 hover:text-clay-700;
+  }
+  .article-html strong {
+    @apply font-semibold text-ink-900;
+  }
+  .article-html blockquote {
+    @apply border-l-4 border-clay-200 pl-5 italic text-ink-700;
+  }
+
   .card {
     @apply rounded-3xl border border-ink-100 bg-white shadow-soft transition-all duration-300;
   }

@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { blogPosts } from '@/lib/blog';
+import { getMergedPosts } from '@/lib/clarion-blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
-import ClarionBlog from '@/components/ClarionBlog';
+
+// Re-fetch the merged (local + Clarion) list at most every 10 minutes.
+export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: 'Blog & Articles',
@@ -13,8 +15,9 @@ export const metadata: Metadata = {
     'Insights on addiction, recovery, and mental health from the team at Wellness Recovery Center of New Jersey.',
 };
 
-export default function BlogPage() {
-  const [featured, ...rest] = blogPosts;
+export default async function BlogPage() {
+  const posts = await getMergedPosts();
+  const [featured, ...rest] = posts;
   return (
     <>
       <PageHero
@@ -85,22 +88,6 @@ export default function BlogPage() {
                 </div>
               </Link>
             ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Clarion's incoming posts render in their own section below — the
-          existing hand-authored posts above are untouched and stay crawlable. */}
-      <section className="section pt-0">
-        <Container>
-          <div className="max-w-2xl">
-            <span className="eyebrow">Fresh off the press</span>
-            <h2 className="mt-2 font-display text-2xl text-ink-900 md:text-3xl">
-              More from our team
-            </h2>
-          </div>
-          <div className="mt-10">
-            <ClarionBlog />
           </div>
         </Container>
       </section>

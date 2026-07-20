@@ -3,6 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Clarion-hosted post cover images come from external CDNs (Unsplash today,
+    // Clarion uploads later). Allow any https host so posts never break on a
+    // new image source — the content itself is first-party (our Clarion feed).
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
   poweredByHeader: false,
   compress: true,

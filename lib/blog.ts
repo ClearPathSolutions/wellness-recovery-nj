@@ -8,6 +8,10 @@ export type BlogPost = {
   image: string;
   excerpt: string;
   body: string[];
+  // Set on posts sourced from the Clarion feed. bodyHtml holds the rendered
+  // article HTML (local posts use the `body` paragraph array instead).
+  source?: 'local' | 'clarion';
+  bodyHtml?: string;
 };
 
 // Ordered newest-first so the homepage can feature the three most recent.
