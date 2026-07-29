@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { team, values } from '@/lib/content';
+import { mergedTeam } from '@/lib/staff-feed';
 import { Container, SectionHeading, Icon } from '@/components/ui';
 import { InsuranceStrip, CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
     'Wellness Recovery Center of New Jersey is an addiction treatment center rooted in client-centered care. Learn about our mission, values, and expert clinical team.',
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const roster = await mergedTeam('wellness-recovery-nj', team);
+
   return (
     <>
       <PageHero
@@ -98,8 +101,8 @@ export default function AboutPage() {
               intro="Experienced, credentialed, and deeply committed to your recovery."
             />
           </div>
-          <div className="reveal mx-auto mt-12 grid max-w-4xl gap-6 sm:grid-cols-3">
-            {team.map((m) => (
+          <div className="reveal mx-auto mt-12 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {roster.map((m) => (
               <div key={m.name} className="card p-7 text-center">
                 <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-clay-50 font-display text-2xl text-clay-600">
                   {m.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
@@ -107,6 +110,9 @@ export default function AboutPage() {
                 <h3 className="mt-4 text-lg text-ink-900">{m.name}</h3>
                 {m.credentials && <p className="mt-1 text-xs font-semibold text-clay-600">{m.credentials}</p>}
                 <p className="mt-2 text-sm text-ink-600">{m.role}</p>
+                {m.bio && (
+                  <p className="mt-3 text-left text-sm leading-relaxed text-ink-600">{m.bio}</p>
+                )}
               </div>
             ))}
           </div>
