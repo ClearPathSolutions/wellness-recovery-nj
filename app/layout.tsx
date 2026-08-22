@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import { site, widgets } from '@/lib/site';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Clarion from '@/components/Clarion';
+import CampaignKeeper from '@/components/CampaignKeeper';
+import { FIRST_TOUCH_SNIPPET } from '@/lib/attribution';
 
 const display = Fraunces({
   subsets: ['latin'],
@@ -79,8 +80,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
-        {/* Call-tracking pixel (tctm.co) — loads early to swap/track phone numbers */}
-        <Script src={widgets.callTracking.src} strategy="beforeInteractive" />
+        {/*
+          First-touch campaign capture. Must run before forms-capture.v1.js,
+          which reads utm_* and gclid live from location.search at submit time.
+          Raw inline script (not next/script) so it executes during HTML parse.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: FIRST_TOUCH_SNIPPET }} />
+        {/*
+          Call-tracking pixel (tctm.co). A raw parser-blocking tag, not
+          next/script: in the App Router `beforeInteractive` only preloads and
+          then injects during React bootstrap, so t.js would run after first
+          paint and a visitor could read and dial the un-swapped number. This
+          runs before <Header /> is parsed, so the number swap lands first.
+        */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src={widgets.callTracking.src} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-900 focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-cream"
@@ -94,6 +108,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
         />
+        {/* Re-applies the first-touch campaign after client-side navigation */}
+        <CampaignKeeper />
         {/* Clarion chat widget + form-capture loader — mounted once, site-wide */}
         <Clarion />
       </body>

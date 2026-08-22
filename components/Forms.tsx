@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { Icon } from './ui';
 import { widgets } from '@/lib/site';
 import { captureLead } from '@/lib/clarion';
+import { persistedClickIds } from '@/lib/attribution';
 
 const fieldClass =
   'w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-clay-500';
@@ -33,11 +34,17 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
 
 export function InsuranceForm() {
   const [sent, setSent] = useState(false);
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    // Fire-and-forget capture — never blocks the user's submission.
-    await captureLead(widgets.clarion.formKeys.insurance, { ...data, variant: 'insurance' });
+    // Fire-and-forget: captureLead waits for the vendor script if it is still
+    // loading, and its fetch uses keepalive — so it must not hold up the
+    // confirmation the visitor sees.
+    void captureLead(widgets.clarion.formKeys.insurance, {
+      ...data,
+      ...persistedClickIds(),
+      variant: 'insurance',
+    });
     setSent(true);
   };
   if (sent) return <SuccessCard onReset={() => setSent(false)} />;
@@ -94,11 +101,17 @@ export function InsuranceForm() {
 
 export function ContactForm() {
   const [sent, setSent] = useState(false);
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    // Fire-and-forget capture — never blocks the user's submission.
-    await captureLead(widgets.clarion.formKeys.contact, { ...data, variant: 'contact' });
+    // Fire-and-forget: captureLead waits for the vendor script if it is still
+    // loading, and its fetch uses keepalive — so it must not hold up the
+    // confirmation the visitor sees.
+    void captureLead(widgets.clarion.formKeys.contact, {
+      ...data,
+      ...persistedClickIds(),
+      variant: 'contact',
+    });
     setSent(true);
   };
   if (sent) return <SuccessCard onReset={() => setSent(false)} />;

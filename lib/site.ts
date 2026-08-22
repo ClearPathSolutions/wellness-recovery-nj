@@ -45,7 +45,8 @@ export const widgets = {
   },
   // Call-tracking pixel (tctm.co — separate vendor). Swaps/tracks phone numbers.
   callTracking: {
-    src: '//264810.tctm.co/t.js',
+    // Absolute https, never the protocol-relative //... form.
+    src: 'https://264810.tctm.co/t.js',
   },
 } as const;
 
