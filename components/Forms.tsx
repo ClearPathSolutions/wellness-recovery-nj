@@ -2,9 +2,11 @@
 
 import { useState, FormEvent } from 'react';
 import { Icon } from './ui';
-import { widgets } from '@/lib/site';
-import { captureLead } from '@/lib/clarion';
-import { persistedClickIds } from '@/lib/attribution';
+import { site, widgets } from '@/lib/site';
+import { submitLead } from '@/lib/session';
+
+/** idle → sending → sent, or error when Clarion did not take the lead. */
+type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 const fieldClass =
   'w-full rounded-xl border border-ink-200 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors focus:border-clay-500';
@@ -32,22 +34,41 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
   );
 }
 
+/**
+ * Shown when delivery failed. The submission is genuinely gone, so the only
+ * honest thing to offer is the phone number — a visitor who thinks they are in
+ * the queue and is not is the worst outcome this form can produce.
+ */
+function ErrorNote() {
+  return (
+    <p
+      role="alert"
+      className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+    >
+      We couldn’t send that just now. Please try again, or call us at{' '}
+      <a href={site.phoneHref} className="font-semibold underline">
+        {site.phone}
+      </a>{' '}
+      — we’re here 24/7.
+    </p>
+  );
+}
+
 export function InsuranceForm() {
-  const [sent, setSent] = useState(false);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [status, setStatus] = useState<Status>('idle');
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    // Fire-and-forget: captureLead waits for the vendor script if it is still
-    // loading, and its fetch uses keepalive — so it must not hold up the
-    // confirmation the visitor sees.
-    void captureLead(widgets.clarion.formKeys.insurance, {
-      ...data,
-      ...persistedClickIds(),
-      variant: 'insurance',
+    const form = new FormData(e.currentTarget);
+    const data: Record<string, string> = { variant: 'insurance' };
+    form.forEach((value, name) => {
+      if (typeof value === 'string') data[name] = value;
     });
-    setSent(true);
+    setStatus('sending');
+    // Awaited on purpose: the confirmation must reflect what actually happened.
+    const ok = await submitLead(widgets.clarion.formKeys.insurance, data);
+    setStatus(ok ? 'sent' : 'error');
   };
-  if (sent) return <SuccessCard onReset={() => setSent(false)} />;
+  if (status === 'sent') return <SuccessCard onReset={() => setStatus('idle')} />;
 
   return (
     <form onSubmit={onSubmit} className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-8">
@@ -91,8 +112,13 @@ export function InsuranceForm() {
         Your information is completely confidential. Submitting this form does not create any
         obligation, and verifying your benefits is always free.
       </p>
-      <button type="submit" className="btn-primary mt-5 w-full sm:w-auto">
-        Verify My Benefits — Free
+      {status === 'error' && <ErrorNote />}
+      <button
+        type="submit"
+        disabled={status === 'sending'}
+        className="btn-primary mt-5 w-full disabled:opacity-60 sm:w-auto"
+      >
+        {status === 'sending' ? 'Sending…' : 'Verify My Benefits — Free'}
         <Icon name="arrow" className="h-4 w-4" />
       </button>
     </form>
@@ -100,21 +126,20 @@ export function InsuranceForm() {
 }
 
 export function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [status, setStatus] = useState<Status>('idle');
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    // Fire-and-forget: captureLead waits for the vendor script if it is still
-    // loading, and its fetch uses keepalive — so it must not hold up the
-    // confirmation the visitor sees.
-    void captureLead(widgets.clarion.formKeys.contact, {
-      ...data,
-      ...persistedClickIds(),
-      variant: 'contact',
+    const form = new FormData(e.currentTarget);
+    const data: Record<string, string> = { variant: 'contact' };
+    form.forEach((value, name) => {
+      if (typeof value === 'string') data[name] = value;
     });
-    setSent(true);
+    setStatus('sending');
+    // Awaited on purpose: the confirmation must reflect what actually happened.
+    const ok = await submitLead(widgets.clarion.formKeys.contact, data);
+    setStatus(ok ? 'sent' : 'error');
   };
-  if (sent) return <SuccessCard onReset={() => setSent(false)} />;
+  if (status === 'sent') return <SuccessCard onReset={() => setStatus('idle')} />;
 
   return (
     <form onSubmit={onSubmit} className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-8">
@@ -147,8 +172,13 @@ export function ContactForm() {
         All messages are confidential. For immediate help, call{' '}
         <a href="tel:+18668613449" className="font-semibold text-clay-700">(866) 861-3449</a> — we’re here 24/7.
       </p>
-      <button type="submit" className="btn-primary mt-5 w-full sm:w-auto">
-        Send Message
+      {status === 'error' && <ErrorNote />}
+      <button
+        type="submit"
+        disabled={status === 'sending'}
+        className="btn-primary mt-5 w-full disabled:opacity-60 sm:w-auto"
+      >
+        {status === 'sending' ? 'Sending…' : 'Send Message'}
         <Icon name="arrow" className="h-4 w-4" />
       </button>
     </form>

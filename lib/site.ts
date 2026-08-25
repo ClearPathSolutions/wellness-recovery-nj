@@ -32,7 +32,11 @@ export const site = {
 // See the Clarion + Tracking playbook for the full setup.
 export const widgets = {
   clarion: {
-    siteKey: 'cpx_gh-wYjucAl0Up0F29gqk3SU00A1p7qsQ', // 👈 only value that changes per site
+    // Public half of the key: the chat widget and blog feed both run in the
+    // browser, so this one is deliberately NEXT_PUBLIC_. Lead delivery uses the
+    // server-only CLARION_SITE_KEY in app/api/verify-insurance/route.ts and
+    // must never read this.
+    siteKey: process.env.NEXT_PUBLIC_CLARION_SITE_KEY ?? '',
     api: 'https://api.clarionlabs.ai',
     widget: 'https://www.clarionlabs.ai/widget.v1.js',
     formsCapture: 'https://www.clarionlabs.ai/forms-capture.v1.js',

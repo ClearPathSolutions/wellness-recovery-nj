@@ -5,8 +5,7 @@ import { site, widgets } from '@/lib/site';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Clarion from '@/components/Clarion';
-import CampaignKeeper from '@/components/CampaignKeeper';
-import { FIRST_TOUCH_SNIPPET } from '@/lib/attribution';
+import SessionTracker from '@/components/SessionTracker';
 
 const display = Fraunces({
   subsets: ['latin'],
@@ -81,12 +80,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
         {/*
-          First-touch campaign capture. Must run before forms-capture.v1.js,
-          which reads utm_* and gclid live from location.search at submit time.
-          Raw inline script (not next/script) so it executes during HTML parse.
-        */}
-        <script dangerouslySetInnerHTML={{ __html: FIRST_TOUCH_SNIPPET }} />
-        {/*
           Call-tracking pixel (tctm.co). A raw parser-blocking tag, not
           next/script: in the App Router `beforeInteractive` only preloads and
           then injects during React bootstrap, so t.js would run after first
@@ -108,8 +101,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
         />
-        {/* Re-applies the first-touch campaign after client-side navigation */}
-        <CampaignKeeper />
+        {/* Records the visit + ad attribution on every route change */}
+        <SessionTracker />
         {/* Clarion chat widget + form-capture loader — mounted once, site-wide */}
         <Clarion />
       </body>

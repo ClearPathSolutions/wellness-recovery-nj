@@ -40,7 +40,15 @@ export default function Clarion() {
         data-font={BRAND.font}
       />
 
-      {/* Form capture — exposes window.ClarionForms.submit(...) */}
+      {/*
+        Form capture. Our forms no longer use it — they POST to
+        /api/verify-insurance, which holds the server-side key — but it stays
+        mounted so Clarion still sees the integration installed.
+
+        Do NOT put data-clarion-form on a form while this is loaded: that
+        attribute opts the form into this script's own auto-submit, and every
+        lead would then reach Clarion twice.
+      */}
       <Script
         src={clarion.formsCapture}
         strategy="afterInteractive"
