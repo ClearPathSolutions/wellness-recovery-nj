@@ -80,14 +80,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body>
         {/*
-          Call-tracking pixel (tctm.co). A raw parser-blocking tag, not
-          next/script: in the App Router `beforeInteractive` only preloads and
-          then injects during React bootstrap, so t.js would run after first
-          paint and a visitor could read and dial the un-swapped number. This
-          runs before <Header /> is parsed, so the number swap lands first.
+          Call-tracking pixel (tctm.co). MUST stay `async` — do not "fix" this
+          to a synchronous tag to make the swap land earlier.
+
+          CTM's number scan defaults its root to document.body. A synchronous
+          tag executes while the body is still being parsed, so the scan finds
+          none of the page's phone numbers and silently no-ops: every visitor
+          then sees the hardcoded number and CTM can only guess which web
+          session an inbound call belongs to. Confirmed live — a blocking tag
+          here left __ctm_tracked_numbers empty on every page.
+
+          There is a second failure on React: a sync tag rewrites numbers
+          before hydration, and React then reverts the swap when it replaces
+          the server HTML.
         */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src={widgets.callTracking.src} />
+        <script async src={widgets.callTracking.src} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink-900 focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-cream"
