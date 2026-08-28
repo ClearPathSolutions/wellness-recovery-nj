@@ -4,6 +4,7 @@ import { programs } from '@/lib/programs';
 import { addictions } from '@/lib/addictions';
 import { areas } from '@/lib/areas';
 import { blogPosts } from '@/lib/blog';
+import { teamBioPages, CANONICAL_AT_PARENT } from '@/lib/content';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
@@ -33,6 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...addictions.map((a) => `/what-we-treat/${a.slug}`),
     ...areas.map((a) => `/areas-we-serve/${a.slug}`),
     ...blogPosts.map((p) => `/blog/${p.slug}`),
+    // Team bios, minus anyone whose canonical points at the parent network —
+    // a sitemap should only list URLs that are canonical to this site.
+    ...teamBioPages
+      .filter((m) => !CANONICAL_AT_PARENT[m.slug])
+      .map((m) => `/about/${m.slug}`),
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: now,

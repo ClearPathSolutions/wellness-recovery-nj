@@ -1,6 +1,17 @@
 // Shared site content: team, values, amenities, FAQs, insurance carriers.
 
-export const team = [
+export type TeamMember = {
+  name: string;
+  credentials: string;
+  role: string;
+  /** Set only for members who have their own bio page under /about. */
+  slug?: string;
+  image?: string;
+  bio?: string[];
+};
+
+// Clinical staff based at our West Windsor facility.
+export const team: TeamMember[] = [
   {
     name: 'Michelle Szwed',
     credentials: 'LPC, LCADC, ACS',
@@ -17,6 +28,43 @@ export const team = [
     role: 'Lead Case Manager',
   },
 ];
+
+// Network-wide leadership — shared across the wider group of facilities rather
+// than staffed to this location, so it is listed separately from our own team.
+export const networkTeam: TeamMember[] = [
+  {
+    slug: 'pamela-tambini',
+    name: 'Dr. Pamela Tambini',
+    credentials: '',
+    role: 'Medical Oversight',
+    image: '/images/team/pamela-tambini.jpg',
+    bio: [
+      'Dr. Pamela Tambini is a board-certified physician in Internal Medicine and Addiction Medicine, entrepreneur, and healthcare executive dedicated to advancing evidence-based treatment for individuals with substance use and co-occurring mental health disorders. She is the Founder and Chief Executive Officer of The Sober Connection, a physician-led medical services organization that partners with behavioral healthcare facilities nationwide to provide comprehensive medical leadership, provider staffing, quality assurance, and regulatory compliance solutions.',
+      'With extensive experience across the continuum of addiction treatment—including medical detoxification, residential treatment, partial hospitalization, intensive outpatient, and outpatient care—Dr. Tambini has developed scalable clinical programs that improve patient outcomes while helping organizations maintain regulatory excellence and operational efficiency. Her expertise includes addiction medicine, psychopharmacology, withdrawal management, medical stabilization, utilization review, physician leadership, and multi-state healthcare operations.',
+      'Prior to founding The Sober Connection, Dr. Tambini served as a hospitalist within the Veterans Health Administration, where she managed medically complex patients and collaborated with multidisciplinary teams to deliver high-quality inpatient care. Her clinical expertise, combined with her operational leadership, provides a unique perspective on integrating medical excellence with sustainable healthcare systems.',
+      'Under Dr. Tambini\'s leadership, The Sober Connection has grown into a multi-state organization supporting behavioral healthcare facilities through physician staffing, medical directorships, quality improvement initiatives, provider education, credentialing, policy development, and clinical oversight. She is recognized for building high-performing medical teams, implementing standardized clinical processes, and helping treatment centers navigate accreditation, licensing, and payer requirements.',
+      'Dr. Tambini is passionate about raising the standard of addiction medicine by combining compassionate patient care with innovative operational strategies. Her leadership philosophy emphasizes clinical integrity, accountability, and collaboration, with a focus on creating systems that support both providers and the patients they serve.',
+      'She remains actively involved in medical education, physician mentorship, and the ongoing advancement of best practices in behavioral healthcare while continuing to care for patients and advise organizations on clinical program development, healthcare operations, and quality improvement initiatives.',
+    ],
+  },
+];
+
+export const teamMembers: TeamMember[] = [...team, ...networkTeam];
+
+// Members who have their own bio page (i.e. those given a slug).
+export const teamBioPages = teamMembers.filter(
+  (m): m is TeamMember & { slug: string } => Boolean(m.slug)
+);
+
+export const getTeamMember = (slug: string) => teamMembers.find((m) => m.slug === slug);
+
+// Bios we publish verbatim from the parent network — the same text also runs on
+// quadranthealthgroup.com and on every other facility site in the group. Without
+// a canonical pointing home, a dozen near-identical pages compete with each other
+// in search. Keyed by slug so only the people listed here are affected.
+export const CANONICAL_AT_PARENT: Record<string, string> = {
+  'pamela-tambini': 'https://www.quadranthealthgroup.com/team/pamela-tambini/',
+};
 
 export const values = [
   {

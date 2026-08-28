@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { team, values } from '@/lib/content';
+import { team, networkTeam, values } from '@/lib/content';
 import { mergedTeam } from '@/lib/staff-feed';
 import { Container, SectionHeading, Icon } from '@/components/ui';
 import { InsuranceStrip, CtaBand } from '@/components/sections';
@@ -14,7 +14,14 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const roster = await mergedTeam('wellness-recovery-nj', team);
+  // `team` bios are paragraph arrays so the /about/<slug> pages can render them
+  // as real paragraphs; the portal feed returns a single string. Flatten on the
+  // way in so the merge sees one shape, and the card below still renders a
+  // plain string.
+  const roster = await mergedTeam(
+    'wellness-recovery-nj',
+    team.map((m) => ({ ...m, bio: m.bio?.join('\n\n') })),
+  );
 
   return (
     <>
@@ -116,6 +123,42 @@ export default async function AboutPage() {
               </div>
             ))}
           </div>
+
+          {/* Network leadership — not staffed to this facility, so listed on its own */}
+          <div className="reveal mx-auto mt-16 max-w-3xl">
+            <SectionHeading eyebrow="Medical Oversight" title="Network medical leadership" />
+            <div className="mt-8 space-y-6">
+              {networkTeam.map((m) => (
+                <div key={m.name} className="card p-7 sm:flex sm:items-center sm:gap-7">
+                  {m.image && (
+                    <div className="relative mx-auto h-32 w-32 shrink-0 overflow-hidden rounded-2xl sm:mx-0">
+                      <Image src={m.image} alt={m.name} fill sizes="128px" className="object-cover" />
+                    </div>
+                  )}
+                  <div className="mt-5 text-center sm:mt-0 sm:text-left">
+                    <h3 className="text-lg text-ink-900">{m.name}</h3>
+                    {m.credentials && (
+                      <p className="mt-1 text-xs font-semibold text-clay-600">{m.credentials}</p>
+                    )}
+                    <p className="mt-1 text-sm text-ink-600">{m.role}</p>
+                    {m.bio && (
+                      <p className="mt-3 text-sm leading-relaxed text-ink-600 line-clamp-3">{m.bio[0]}</p>
+                    )}
+                    {m.slug && (
+                      <Link
+                        href={`/about/${m.slug}`}
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-clay-600 hover:text-clay-700"
+                      >
+                        Read full bio
+                        <Icon name="arrow" className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="reveal mt-10 text-center">
             <Link href="/admissions" className="btn-primary">
               How Do I Get Started?
