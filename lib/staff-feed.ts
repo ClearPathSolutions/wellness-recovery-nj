@@ -2,14 +2,16 @@
  * Team roster, merged with the Quadrant support portal
  * (support.quadranthealthgroup.com/dev/staff).
  *
- * The portal is the source of truth for bio text, titles and credentials. This
- * site keeps anyone the portal does not carry, so nobody disappears when the
- * portal's roster is narrower.
+ * `lib/team.ts` is the published roster: it decides who appears, in what
+ * order, and under which title and credentials. The portal is the source of
+ * truth for bio prose, which changes far more often than a job title does, so
+ * a bio edited in the portal shows up here without a deploy.
  *
  * Merge rules:
- *   - person in both  -> portal's title/credentials/bio, local photo retained
- *   - local only      -> kept exactly as authored here
- *   - portal only     -> appended
+ *   - person in both  -> local name/title/credentials/photo, portal's bio
+ *   - local only      -> kept exactly as authored, local bio and all
+ *   - portal only     -> ignored, so a departure or a roster the facility has
+ *                        not signed off on cannot appear on the site by itself
  *
  * Fails soft: if the portal is unreachable the local roster renders unchanged.
  */
@@ -29,6 +31,8 @@ export type Member = {
   name: string;
   credentials: string;
   role: string;
+  slug?: string;
+  image?: string;
   bio?: string;
 };
 
@@ -65,26 +69,8 @@ export async function mergedTeam(
   if (feed.length === 0) return [...local];
 
   const byKey = new Map(feed.map((p) => [nameKey(p.name), p]));
-  const merged: Member[] = local.map((m) => {
+  return local.map((m) => {
     const p = byKey.get(nameKey(m.name));
-    if (!p) return m;
-    byKey.delete(nameKey(m.name));
-    return {
-      ...m,
-      // Portal text wins; it has no photos, so anything local keeps its own.
-      credentials: p.credentials ?? m.credentials,
-      role: p.title || m.role,
-      bio: p.bio ?? m.bio,
-    };
+    return p?.bio ? { ...m, bio: p.bio } : m;
   });
-
-  for (const p of byKey.values()) {
-    merged.push({
-      name: p.name,
-      credentials: p.credentials ?? '',
-      role: p.title,
-      bio: p.bio ?? undefined,
-    });
-  }
-  return merged;
 }

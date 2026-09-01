@@ -60,7 +60,7 @@ export default function TeamMemberPage({ params }: { params: { slug: string } })
             <aside className="reveal lg:sticky lg:top-28 lg:self-start">
               <div className="rounded-3xl border border-ink-100 bg-white p-7 shadow-card">
                 {member.image && (
-                  <div className="relative aspect-square overflow-hidden rounded-2xl">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-sand-100">
                     <Image
                       src={member.image}
                       alt={member.name}

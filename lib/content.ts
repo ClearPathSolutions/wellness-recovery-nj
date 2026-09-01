@@ -1,33 +1,10 @@
 // Shared site content: team, values, amenities, FAQs, insurance carriers.
 
-export type TeamMember = {
-  name: string;
-  credentials: string;
-  role: string;
-  /** Set only for members who have their own bio page under /about. */
-  slug?: string;
-  image?: string;
-  bio?: string[];
-};
+export type { TeamMember } from './team';
+export { team } from './team';
 
-// Clinical staff based at our West Windsor facility.
-export const team: TeamMember[] = [
-  {
-    name: 'Michelle Szwed',
-    credentials: 'LPC, LCADC, ACS',
-    role: 'Clinical Director',
-  },
-  {
-    name: 'Dr. Olivia M. Gibson-Delaney',
-    credentials: 'M.D.',
-    role: 'Medical Director',
-  },
-  {
-    name: 'Ila Holgerson',
-    credentials: '',
-    role: 'Lead Case Manager',
-  },
-];
+import type { TeamMember } from './team';
+import { team } from './team';
 
 // Network-wide leadership — shared across the wider group of facilities rather
 // than staffed to this location, so it is listed separately from our own team.

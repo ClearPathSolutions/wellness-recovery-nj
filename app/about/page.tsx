@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
   // `team` bios are paragraph arrays so the /about/<slug> pages can render them
   // as real paragraphs; the portal feed returns a single string. Flatten on the
-  // way in so the merge sees one shape, and the card below still renders a
-  // plain string.
+  // way in so the merge sees one shape — the cards below only ever show the
+  // opening lines, clamped, with the full text living on the bio page.
   const roster = await mergedTeam(
     'wellness-recovery-nj',
     team.map((m) => ({ ...m, bio: m.bio?.join('\n\n') })),
@@ -109,19 +109,61 @@ export default async function AboutPage() {
             />
           </div>
           <div className="reveal mx-auto mt-12 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {roster.map((m) => (
-              <div key={m.name} className="card p-7 text-center">
-                <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-clay-50 font-display text-2xl text-clay-600">
-                  {m.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-                </span>
-                <h3 className="mt-4 text-lg text-ink-900">{m.name}</h3>
-                {m.credentials && <p className="mt-1 text-xs font-semibold text-clay-600">{m.credentials}</p>}
-                <p className="mt-2 text-sm text-ink-600">{m.role}</p>
-                {m.bio && (
-                  <p className="mt-3 text-left text-sm leading-relaxed text-ink-600">{m.bio}</p>
-                )}
-              </div>
-            ))}
+            {roster.map((m) => {
+              const card = (
+                <>
+                  <div className="relative aspect-[4/5] overflow-hidden bg-sand-100">
+                    {m.image ? (
+                      <Image
+                        src={m.image}
+                        alt={m.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <span className="flex h-full w-full items-center justify-center font-display text-4xl text-clay-600">
+                        {m.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg text-ink-900">{m.name}</h3>
+                    {m.credentials && (
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-clay-600">
+                        {m.credentials}
+                      </p>
+                    )}
+                    <p className="mt-1 text-sm font-medium text-ink-600">{m.role}</p>
+                    {m.bio && (
+                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-600">
+                        {m.bio}
+                      </p>
+                    )}
+                    {m.slug && (
+                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-clay-600 group-hover:text-clay-700">
+                        Read bio
+                        <Icon name="arrow" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    )}
+                  </div>
+                </>
+              );
+
+              return m.slug ? (
+                <Link
+                  key={m.name}
+                  href={`/about/${m.slug}`}
+                  className="card card-hover group flex flex-col overflow-hidden"
+                >
+                  {card}
+                </Link>
+              ) : (
+                <div key={m.name} className="card group flex flex-col overflow-hidden">
+                  {card}
+                </div>
+              );
+            })}
           </div>
 
           {/* Network leadership — not staffed to this facility, so listed on its own */}
