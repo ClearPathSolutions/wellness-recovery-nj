@@ -49,8 +49,9 @@ export const team: TeamMember[] = [
     role: "Director of Operations",
     image: "/images/team/ila-holgerson.jpg",
     bio: [
-      "Ila serves as the Director of Clinical Operations at Wellness Recovery Center, where she has been a dedicated member of the team since 2023. Originally from Gilbert, Arizona, she brings a compassionate, client-centered approach to leadership, with a strong commitment to delivering high-quality, individualized care that supports lasting recovery. As Director of Clinical Operations, Ila oversees the day-to-day clinical operations of the facility, working closely with multidisciplinary teams to ensure seamless coordination of care, regulatory compliance, and exceptional client outcomes.",
-      "Drawing on her background in case management, she is passionate about removing barriers to recovery and developing systems that allow both clients and staff to thrive. Known for her strong leadership, collaborative mindset, and problem-solving abilities, Ila is dedicated to fostering a supportive environment where every client feels heard, valued, and empowered throughout their treatment journey.",
+      "Ila Holgerson serves as the Director of Operations at Wellness Recovery Center, where she has been a dedicated member of the team since 2023. Originally from Gilbert, Arizona, she brings a compassionate, client-centered approach to leadership and a strong commitment to creating an environment where individuals feel supported throughout their recovery journey.",
+      "As Director of Operations, Ila oversees the day-to-day operations of the facility, including staffing, admissions coordination, facility needs, and overall operational workflow. She works closely with department leadership to promote clear communication, seamless coordination, and a consistently high standard of care for clients and their families.",
+      "Drawing on her background in case management, Ila understands the importance of removing barriers to treatment and ensuring each client’s experience is handled with compassion, respect, and attention to their individual needs. Known for her strong leadership, collaborative approach, and problem-solving abilities, she is dedicated to supporting both clients and staff while helping Wellness Recovery Center provide a welcoming, organized, and effective treatment environment.",
     ],
   },
   {
