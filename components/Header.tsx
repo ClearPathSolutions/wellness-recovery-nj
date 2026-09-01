@@ -81,7 +81,7 @@ export default function Header() {
         }`}
       >
         <div className="container flex h-[68px] items-center justify-between gap-4 lg:h-[76px]">
-          <Logo />
+          <Logo priority />
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
