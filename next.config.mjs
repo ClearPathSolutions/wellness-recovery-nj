@@ -14,6 +14,18 @@ const SELF = "'self'";
 const CLARION = 'https://www.clarionlabs.ai';
 const CLARION_API = 'https://api.clarionlabs.ai';
 
+/**
+ * Where Clarion post images actually come from.
+ *
+ * api.clarionlabs.ai does not serve the bytes — /blog/public/image/... answers
+ * 302 with a presigned S3 URL on this bucket. CSP is enforced against every
+ * redirect hop, so allowing only the API host blocks the image at the hop and
+ * the post renders with a broken icon. Cover images hide this, because
+ * next/image fetches them server-side and serves them from 'self'; only the
+ * raw <img> tags inside Clarion post body HTML are affected.
+ */
+const CLARION_MEDIA = 'https://clarion-meta-ads-media.s3.amazonaws.com';
+
 // CallTrackingMetrics — t.js, plus the p.js that t.js injects itself.
 const CTM = 'https://264810.tctm.co';
 
@@ -47,7 +59,7 @@ const csp = [
   // pulls its own preset stylesheet from its CDN — it loads late, after the
   // widget boots, so it is easy to miss on a quick page sweep.
   `style-src ${SELF} 'unsafe-inline' ${GFONTS_CSS} ${TRUSTINDEX}`,
-  `img-src ${SELF} data: blob: ${CLARION_API} ${CLARION} ${UNSPLASH} ${CTM} ${TRUSTINDEX} ${GMAPS.join(' ')} https://*.googleusercontent.com`,
+  `img-src ${SELF} data: blob: ${CLARION_API} ${CLARION_MEDIA} ${CLARION} ${UNSPLASH} ${CTM} ${TRUSTINDEX} ${GMAPS.join(' ')} https://*.googleusercontent.com`,
   `font-src ${SELF} data: ${GFONTS_FILES}`,
   `connect-src ${SELF} ${CLARION_API} ${CLARION} ${CTM} ${TRUSTINDEX} ${GMAPS.join(' ')}`,
   `frame-src ${SELF} ${CLARION} ${TRUSTINDEX} https://www.google.com`,
