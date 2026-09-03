@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getMergedPosts } from '@/lib/clarion-blog';
+import { coverFit } from '@/lib/blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
@@ -35,13 +36,15 @@ export default async function BlogPage() {
             href={`/blog/${featured.slug}`}
             className="reveal card card-hover group grid overflow-hidden lg:grid-cols-2"
           >
-            <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto">
+            <div
+              className={`relative aspect-[16/10] overflow-hidden lg:aspect-auto ${coverFit(featured.source).frame}`}
+            >
               <Image
                 src={featured.image}
                 alt={featured.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className={`${coverFit(featured.source).image} transition-transform duration-500 group-hover:scale-105`}
               />
             </div>
             <div className="flex flex-col justify-center p-8 lg:p-12">
@@ -70,13 +73,15 @@ export default async function BlogPage() {
                 href={`/blog/${post.slug}`}
                 className="card card-hover group flex flex-col overflow-hidden sm:flex-row"
               >
-                <div className="relative aspect-[16/10] shrink-0 overflow-hidden sm:aspect-auto sm:w-44">
+                <div
+                  className={`relative aspect-[16/10] shrink-0 overflow-hidden sm:aspect-auto sm:w-44 ${coverFit(post.source).frame}`}
+                >
                   <Image
                     src={post.image}
                     alt={post.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 176px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className={`${coverFit(post.source).image} transition-transform duration-500 group-hover:scale-105`}
                   />
                 </div>
                 <div className="flex flex-col justify-center p-6">

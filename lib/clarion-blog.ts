@@ -37,6 +37,73 @@ function displayDate(iso: string): string {
   return Number.isNaN(d.getTime()) ? '' : displayDateFmt.format(d);
 }
 
+/* ------------------------------------------------------------------ */
+/* Table-of-contents anchors                                           */
+/* ------------------------------------------------------------------ */
+
+function stripTags(html: string): string {
+  return html.replace(/<[^>]*>/g, '');
+}
+
+/** Decode the few entities Clarion actually emits, then flatten whitespace. */
+function normalizeText(html: string): string {
+  return stripTags(html)
+    .replace(/&amp;/g, '&')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(Number(d)))
+    .replace(/&[a-z]+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+function slugify(text: string): string {
+  return normalizeText(text)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Give the body's headings the ids its own table of contents already links to.
+ *
+ * Clarion emits a TOC of `<a href="#some-slug">Heading text</a>` but renders the
+ * matching headings as bare `<h2>` with no id, so every TOC link is a dead
+ * anchor and clicking one does nothing.
+ *
+ * The ids are read back off those TOC links rather than re-derived from the
+ * heading text: matching each link's own label to the heading it names cannot
+ * drift from whatever slug rule Clarion used. Slugifying is only the fallback
+ * for a heading the TOC does not list.
+ */
+function withHeadingIds(html: string): string {
+  const fromToc = new Map<string, string>();
+  const anchors = html.matchAll(/<a\b[^>]*href="#([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi);
+  for (const [, slug, label] of anchors) {
+    const key = normalizeText(label);
+    if (key && !fromToc.has(key)) fromToc.set(key, slug);
+  }
+
+  const used = new Set<string>();
+  return html.replace(
+    /<(h[2-4])\b([^>]*)>([\s\S]*?)<\/\1>/gi,
+    (whole, tag: string, attrs: string, inner: string) => {
+      if (/\sid\s*=/i.test(attrs)) return whole;
+      const text = normalizeText(inner);
+      let id = fromToc.get(text) || slugify(inner);
+      if (!id) return whole;
+      // Two headings with the same wording would otherwise share an anchor and
+      // every link to the second would land on the first.
+      if (used.has(id)) {
+        let n = 2;
+        while (used.has(`${id}-${n}`)) n += 1;
+        id = `${id}-${n}`;
+      }
+      used.add(id);
+      return `<${tag}${attrs} id="${id}">${inner}</${tag}>`;
+    },
+  );
+}
+
 function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
   return {
     slug: p.slug,
@@ -49,7 +116,7 @@ function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
     excerpt: p.excerpt,
     body: [],
     source: 'clarion',
-    bodyHtml,
+    bodyHtml: bodyHtml ? withHeadingIds(bodyHtml) : bodyHtml,
   };
 }
 

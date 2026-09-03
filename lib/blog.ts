@@ -14,6 +14,25 @@ export type BlogPost = {
   bodyHtml?: string;
 };
 
+/**
+ * How a post's cover should fill its frame.
+ *
+ * Local covers are photographs, so cropping them to fill the frame is right —
+ * any part of the photo reads the same.
+ *
+ * Clarion covers are not photographs. They are designed banners with the
+ * headline and the facility logo baked into the artwork, exported at whatever
+ * aspect ratio the author chose, and the feed never tells us that ratio.
+ * Cropping one to fit cuts words and half the logo off. Containing it shows
+ * every cover whole no matter what dimensions Clarion sends, at the cost of
+ * some letterboxing, which the tinted frame makes look deliberate.
+ */
+export function coverFit(source: BlogPost['source']): { image: string; frame: string } {
+  return source === 'clarion'
+    ? { image: 'object-contain', frame: 'bg-ink-50' }
+    : { image: 'object-cover', frame: '' };
+}
+
 // Ordered newest-first so the homepage can feature the three most recent.
 export const blogPosts: BlogPost[] = [
   {

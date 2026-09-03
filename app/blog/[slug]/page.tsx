@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getPost } from '@/lib/blog';
+import { getPost, coverFit } from '@/lib/blog';
 import { getClarionPost, getMergedPosts } from '@/lib/clarion-blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
@@ -68,14 +68,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
       {/* Cover image */}
       <Container className="-mt-8 md:-mt-12">
-        <div className="relative aspect-[16/9] overflow-hidden rounded-3xl shadow-lift">
+        <div
+          className={`relative aspect-[16/9] overflow-hidden rounded-3xl shadow-lift ${coverFit(post.source).frame}`}
+        >
           <Image
             src={post.image}
             alt={post.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
+            className={coverFit(post.source).image}
           />
         </div>
       </Container>
@@ -121,13 +123,15 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 href={`/blog/${p.slug}`}
                 className="card card-hover group flex flex-col overflow-hidden sm:flex-row"
               >
-                <div className="relative aspect-[16/10] shrink-0 overflow-hidden sm:aspect-auto sm:w-44">
+                <div
+                  className={`relative aspect-[16/10] shrink-0 overflow-hidden sm:aspect-auto sm:w-44 ${coverFit(p.source).frame}`}
+                >
                   <Image
                     src={p.image}
                     alt={p.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 176px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className={`${coverFit(p.source).image} transition-transform duration-500 group-hover:scale-105`}
                   />
                 </div>
                 <div className="flex flex-col justify-center p-6">
