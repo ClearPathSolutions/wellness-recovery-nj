@@ -104,6 +104,37 @@ function withHeadingIds(html: string): string {
   );
 }
 
+/**
+ * Give the references list the ids the citation markers link to.
+ *
+ * The same fault as the headings, one level down: Clarion renders inline
+ * citations as `<a href="#ref1">[1]</a>` but the references list is plain
+ * `<li>` with no ids, so clicking a footnote marker does nothing. `#refN`
+ * means the Nth entry of that list.
+ */
+function withReferenceIds(html: string): string {
+  if (!/href="#ref\d+"/i.test(html)) return html;
+
+  // Run after withHeadingIds, so the references heading already carries its id.
+  const heading =
+    html.search(/<h[2-4][^>]*\bid="references"/i) !== -1
+      ? html.search(/<h[2-4][^>]*\bid="references"/i)
+      : html.search(/<h[2-4][^>]*>\s*references\s*<\/h[2-4]>/i);
+  if (heading === -1) return html;
+
+  const start = html.indexOf('<ol', heading);
+  const end = html.indexOf('</ol>', start);
+  if (start === -1 || end === -1) return html;
+
+  let n = 0;
+  const list = html.slice(start, end).replace(/<li\b([^>]*)>/gi, (whole, attrs: string) => {
+    if (/\sid\s*=/i.test(attrs)) return whole;
+    n += 1;
+    return `<li${attrs} id="ref${n}">`;
+  });
+  return html.slice(0, start) + list + html.slice(end);
+}
+
 function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
   return {
     slug: p.slug,
@@ -116,7 +147,7 @@ function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
     excerpt: p.excerpt,
     body: [],
     source: 'clarion',
-    bodyHtml: bodyHtml ? withHeadingIds(bodyHtml) : bodyHtml,
+    bodyHtml: bodyHtml ? withReferenceIds(withHeadingIds(bodyHtml)) : bodyHtml,
   };
 }
 

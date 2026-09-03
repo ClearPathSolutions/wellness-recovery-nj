@@ -90,9 +90,9 @@
   .article-html h3 {
     @apply mt-8 font-display text-xl text-ink-900;
   }
-  /* The header is sticky (68px, 116px from lg), so a table-of-contents jump
-     would otherwise drop the heading underneath it. */
-  .article-html :is(h2, h3, h4)[id] {
+  /* The header is sticky (68px, 116px from lg), so jumping to a heading or a
+     footnote would otherwise drop the target underneath it. */
+  .article-html :is(h2, h3, h4, li)[id] {
     @apply scroll-mt-24 lg:scroll-mt-36;
   }
   .article-html ul {
