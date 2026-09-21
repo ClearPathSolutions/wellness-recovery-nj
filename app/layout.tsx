@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       addressCountry: 'US',
     },
     openingHours: 'Mo-Su 00:00-23:59',
-    sameAs: [site.social.facebook, site.social.instagram],
+    sameAs: [site.social.facebook, site.social.instagram, site.social.linkedin],
   };
 
   return (

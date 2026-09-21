@@ -60,12 +60,7 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-clay-300">
-              Facebook
-            </a>
-            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-clay-300">
-              Instagram
-            </a>
+            {/* Social lives in the footer only — see `socialLinks` in Footer.tsx. */}
             <a href={site.emailHref} className="inline-flex items-center gap-2 hover:text-clay-300">
               <Icon name="mail" className="h-3.5 w-3.5 text-clay-300" />
               {site.email}

@@ -25,6 +25,7 @@ export const site = {
   social: {
     facebook: 'https://www.facebook.com/wellnessrecoverynj/',
     instagram: 'https://www.instagram.com/wellnessrecoverynj',
+    linkedin: 'https://www.linkedin.com/company/wellness-recovery-nj',
   },
 } as const;
 
@@ -64,8 +65,8 @@ export type NavItem = {
   columns?: NavColumn[];
 };
 
+// No 'Home' entry — the logo is the route home, on both desktop and mobile.
 export const nav: NavItem[] = [
-  { label: 'Home', href: '/' },
   { label: 'Who We Are', href: '/about' },
   {
     label: 'Treatment',

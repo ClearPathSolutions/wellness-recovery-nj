@@ -63,26 +63,28 @@ export const values = [
   },
 ];
 
+// Each tile has to name the room in its own photo — we run an outpatient
+// program, so there is no patio, no lounge deck, and no bedroom to show.
 export const amenities = [
   {
-    title: 'Outdoor Lounge',
-    caption: 'Perfect for groups',
-    image: '/images/facility/facility-4463.jpg',
+    title: 'Client Lounge',
+    caption: 'Room to relax between sessions',
+    image: '/images/facility/facility-4491.jpg',
   },
   {
     title: 'Group Rooms',
     caption: 'A safe environment',
+    image: '/images/facility/facility-4473.jpg',
+  },
+  {
+    title: 'Meditation Room',
+    caption: 'Yoga, reiki, and quiet time',
     image: '/images/facility/facility-4480.jpg',
   },
   {
-    title: 'Private Rooms',
-    caption: 'A place to call your own',
-    image: '/images/facility/facility-4489.jpg',
-  },
-  {
-    title: 'Patio Area',
-    caption: 'Enjoy the views',
-    image: '/images/facility/facility-4491.jpg',
+    title: 'Private Session Rooms',
+    caption: 'One-on-one with your therapist',
+    image: '/images/facility/facility-4458.jpg',
   },
 ];
 

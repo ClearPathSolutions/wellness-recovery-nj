@@ -29,7 +29,7 @@ export default function TourPage() {
             <SectionHeading
               eyebrow="Healing Happens Here"
               title="Spaces designed for comfort"
-              intro="From private rooms to outdoor lounges, every space was created to help you feel safe, calm, and cared for."
+              intro="From group rooms to quiet corners for one-on-one work, every space was created to help you feel safe, calm, and cared for."
             />
           </div>
           <div className="reveal mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

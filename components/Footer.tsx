@@ -21,6 +21,13 @@ const companyLinks = [
   { label: 'Blog & Articles', href: '/blog' },
 ];
 
+// The site's only social links — the header used to carry a duplicate text set.
+const socialLinks = [
+  { label: 'Facebook', href: site.social.facebook, icon: 'facebook' },
+  { label: 'Instagram', href: site.social.instagram, icon: 'instagram' },
+  { label: 'LinkedIn', href: site.social.linkedin, icon: 'linkedin' },
+] as const;
+
 const treatLinks = [
   { label: 'Alcohol', href: '/what-we-treat/alcohol' },
   { label: 'Opioids', href: '/what-we-treat/opioids' },
@@ -121,12 +128,21 @@ export default function Footer() {
             <Link href="/privacy-policy" className="hover:text-clay-300">
               Privacy Policy
             </Link>
-            <a href={site.social.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-clay-300">
-              Facebook
-            </a>
-            <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-clay-300">
-              Instagram
-            </a>
+            <ul className="flex items-center gap-2">
+              {socialLinks.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${site.name} on ${s.label}`}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-cream/70 transition-colors hover:border-clay-300/50 hover:bg-white/5 hover:text-clay-300"
+                  >
+                    <Icon name={s.icon} className="h-4 w-4" />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
