@@ -57,11 +57,11 @@ export const team: TeamMember[] = [
   {
     slug: "amy-baisden",
     name: "Amy Baisden",
-    credentials: "LAMFT",
+    credentials: "LMFT",
     role: "Lead Clinical Therapist",
     image: "/images/team/amy-baisden.jpg",
     bio: [
-      "Amy Baisden is a Licensed Associate Marriage and Family Therapist and EMDR-trained clinician who works with adults navigating trauma, grief and loss, depression, anxiety, attachment wounds, life transitions, and recovery. She earned her Master’s degree in Marriage and Family Therapy from Touro University and brings extensive experience in community mental health, non profit settings and partial hospitalization/intensive outpatient settings, supporting individuals with co-occurring mental health and substance use disorders. Amy also has a strong background in crisis management, as well as grief and loss work, with a particular focus on complex family dynamics.",
+      "Amy Baisden is a Licensed Marriage and Family Therapist and EMDR-trained clinician who works with adults navigating trauma, grief and loss, depression, anxiety, attachment wounds, life transitions, and recovery. She earned her Master’s degree in Marriage and Family Therapy from Touro University and brings extensive experience in community mental health, non profit settings and partial hospitalization/intensive outpatient settings, supporting individuals with co-occurring mental health and substance use disorders. Amy also has a strong background in crisis management, as well as grief and loss work, with a particular focus on complex family dynamics.",
       "Amy has worked with children, adolescents, adults, couples, and families, and approaches all clinical work through a systemic lens that considers the broader relational and environmental context. Her therapeutic style is warm, collaborative, and trauma-informed, integrating Internal Family Systems (IFS), EMDR, inner child work, and attachment-based approaches. She helps clients build insight, process unresolved experiences, and develop greater resilience, self-compassion, and emotional regulation.",
     ],
   },
