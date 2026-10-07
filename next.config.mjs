@@ -140,6 +140,14 @@ const nextConfig = {
       { source: '/contact-us', destination: '/contact', permanent: true },
       { source: '/faq-page', destination: '/faq', permanent: true },
       { source: '/treatment/intensive-outpatient', destination: '/treatment/intensive-outpatient-program', permanent: true },
+      // Job listings live on ADP. Temporary, not permanent: browsers cache a
+      // 308 indefinitely, and this URL changes whenever ADP is reconfigured.
+      {
+        source: '/careers',
+        destination:
+          'https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=e1094ba9-8b93-4f55-9dab-3102a4eaaa49&ccId=9200865815387_2&lang=en_US',
+        permanent: false,
+      },
     ];
   },
 };
