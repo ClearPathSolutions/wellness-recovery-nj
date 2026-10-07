@@ -6,6 +6,7 @@ import { mergedTeam } from '@/lib/staff-feed';
 import { Container, SectionHeading, Icon } from '@/components/ui';
 import { InsuranceStrip, CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
+import { editorialPolicyServed, EDITORIAL_POLICY_PATH } from '@/lib/editorial';
 
 export const metadata: Metadata = {
   title: 'Who We Are',
@@ -200,6 +201,16 @@ export default async function AboutPage() {
               ))}
             </div>
           </div>
+
+          {editorialPolicyServed && (
+            <p className="reveal mx-auto mt-12 max-w-2xl text-center text-sm text-ink-600">
+              Learn how we research, write and review the health information on this site in our{' '}
+              <Link href={EDITORIAL_POLICY_PATH} className="link-underline">
+                Editorial Policy
+              </Link>
+              .
+            </p>
+          )}
 
           <div className="reveal mt-10 text-center">
             <Link href="/admissions" className="btn-primary">

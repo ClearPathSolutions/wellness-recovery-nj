@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { site } from '@/lib/site';
 import { accreditations } from '@/lib/content';
+import { editorialPolicyServed, EDITORIAL_POLICY_PATH } from '@/lib/editorial';
 import Logo from './Logo';
 import { Icon } from './ui';
 
@@ -128,6 +129,12 @@ export default function Footer() {
             <Link href="/privacy-policy" className="hover:text-clay-300">
               Privacy Policy
             </Link>
+            {/* Linked only where the policy is served, so production never links a 404. */}
+            {editorialPolicyServed && (
+              <Link href={EDITORIAL_POLICY_PATH} className="hover:text-clay-300">
+                Editorial Policy
+              </Link>
+            )}
             <ul className="flex items-center gap-2">
               {socialLinks.map((s) => (
                 <li key={s.label}>

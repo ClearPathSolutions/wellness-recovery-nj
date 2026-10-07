@@ -2,6 +2,12 @@ import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
 import { site, widgets } from '@/lib/site';
+import {
+  editorialPolicyReady,
+  EDITORIAL_POLICY_URL,
+  CORRECTIONS_ANCHOR,
+  ORGANIZATION_ID,
+} from '@/lib/editorial';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Clarion from '@/components/Clarion';
@@ -59,6 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const ldJson = {
     '@context': 'https://schema.org',
     '@type': 'MedicalBusiness',
+    // Referenced by the editorial policy page and article schema.
+    '@id': ORGANIZATION_ID,
     name: site.name,
     description: site.description,
     url: site.url,
@@ -74,6 +82,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
     openingHours: 'Mo-Su 00:00-23:59',
     sameAs: [site.social.facebook, site.social.instagram, site.social.linkedin],
+    // Editorial policy package: merged into this node, never a second one, and
+    // only once the policy is live.
+    ...(editorialPolicyReady
+      ? {
+          publishingPrinciples: EDITORIAL_POLICY_URL,
+          correctionsPolicy: `${EDITORIAL_POLICY_URL}#${CORRECTIONS_ANCHOR}`,
+        }
+      : {}),
   };
 
   return (

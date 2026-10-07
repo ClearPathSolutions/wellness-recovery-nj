@@ -12,6 +12,19 @@ export type BlogPost = {
   // article HTML (local posts use the `body` paragraph array instead).
   source?: 'local' | 'clarion';
   bodyHtml?: string;
+  /**
+   * Editorial policy per-post fields (package README "Post fields":
+   * written_by, reviewed_by, last_reviewed). All optional.
+   *
+   * writtenBy / reviewedBy are team slugs (the part after /about/), so the
+   * name links to that person's bio page; an unknown slug fails the build.
+   * Without writtenBy the byline falls back to `author` above. There is never a
+   * site-wide default reviewer: no reviewedBy + lastReviewed, no reviewer line.
+   */
+  writtenBy?: string;
+  reviewedBy?: string;
+  /** YYYY-MM-DD. */
+  lastReviewed?: string;
 };
 
 /**

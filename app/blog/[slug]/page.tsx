@@ -6,6 +6,8 @@ import { getPost, coverFit } from '@/lib/blog';
 import { getClarionPost, getMergedPosts } from '@/lib/clarion-blog';
 import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
+import ArticleByline from '@/components/ArticleByline';
+import { getByline, articleSchema } from '@/lib/byline';
 
 export const revalidate = 600;
 
@@ -36,9 +38,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   if (!post) notFound();
 
   const related = (await getMergedPosts()).filter((p) => p.slug !== post.slug).slice(0, 2);
+  const byline = getByline(post);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema(post, byline)) }}
+      />
       {/* Article header */}
       <section className="bg-ink-900 text-cream">
         <Container className="py-14 md:py-20">
@@ -62,7 +69,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <h1 className="mt-5 max-w-3xl font-display text-3xl leading-tight text-white sm:text-4xl md:text-[2.9rem]">
             {post.title}
           </h1>
-          <p className="mt-5 text-sm text-cream/70">By {post.author}</p>
+          <div className="mt-5 max-w-3xl text-cream/80">
+            <ArticleByline byline={byline} />
+          </div>
         </Container>
       </section>
 

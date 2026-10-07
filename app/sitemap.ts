@@ -5,6 +5,7 @@ import { addictions } from '@/lib/addictions';
 import { areas } from '@/lib/areas';
 import { blogPosts } from '@/lib/blog';
 import { teamBioPages, CANONICAL_AT_PARENT } from '@/lib/content';
+import { editorialPolicyReady, EDITORIAL_POLICY_PATH } from '@/lib/editorial';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
@@ -46,5 +47,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...dynamicRoutes];
+  // Listed only once the policy may be indexed (see lib/editorial.ts).
+  const editorialRoutes: MetadataRoute.Sitemap = editorialPolicyReady
+    ? [
+        {
+          url: `${base}${EDITORIAL_POLICY_PATH}`,
+          lastModified: now,
+          changeFrequency: 'yearly',
+          priority: 0.3,
+        },
+      ]
+    : [];
+
+  return [...staticRoutes, ...dynamicRoutes, ...editorialRoutes];
 }
