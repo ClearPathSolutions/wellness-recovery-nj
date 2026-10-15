@@ -33,7 +33,7 @@ export const editorial = {
   /** YYYY-MM-DD. Blank until the content team reviews the policy. */
   lastReviewed: '2026-10-07',
   /** Copy of the CSV's CONTENT_SIGNOFF cell. Blank until signed off. */
-  contentSignoff: '',
+  contentSignoff: '2026-10-15',
 };
 
 // No trailing slash: the site's routes have none, and Next redirects the
