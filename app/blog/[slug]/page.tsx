@@ -8,6 +8,7 @@ import { Container, Icon } from '@/components/ui';
 import { CtaBand } from '@/components/sections';
 import ArticleByline from '@/components/ArticleByline';
 import { getByline, articleSchema } from '@/lib/byline';
+import { seoTitle } from '@/lib/site';
 
 export const revalidate = 600;
 
@@ -27,7 +28,7 @@ export async function generateMetadata({
   const p = getPost(params.slug) ?? (await getClarionPost(params.slug));
   if (!p) return {};
   return {
-    title: p.title,
+    title: seoTitle(p.title),
     description: p.excerpt,
     openGraph: { title: p.title, description: p.excerpt, images: [p.image] },
   };
@@ -37,7 +38,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const post = getPost(params.slug) ?? (await getClarionPost(params.slug));
   if (!post) notFound();
 
-  const related = (await getMergedPosts()).filter((p) => p.slug !== post.slug).slice(0, 2);
+  // The next posts after this one (wrapping), not always the two newest: that
+  // way every post is linked from other posts rather than the newest two
+  // collecting every "related" link on the site.
+  const merged = await getMergedPosts();
+  const at = merged.findIndex((p) => p.slug === post.slug);
+  const related = [1, 2]
+    .map((n) => merged[((at < 0 ? -1 : at) + n + merged.length) % merged.length])
+    .filter((p, i, all) => p && p.slug !== post.slug && all.findIndex((q) => q?.slug === p.slug) === i);
   const byline = getByline(post);
 
   return (

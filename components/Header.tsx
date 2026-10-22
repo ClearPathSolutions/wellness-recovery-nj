@@ -111,6 +111,7 @@ export default function Header() {
               className="btn-primary h-11 w-11 !px-0"
             >
               <Icon name="phone" className="h-5 w-5" />
+              <span className="sr-only">Call {site.phone}</span>
             </a>
             <button
               type="button"

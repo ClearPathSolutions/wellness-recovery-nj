@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { seoTitle } from '@/lib/site';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,7 +16,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const p = getProgram(params.slug);
   if (!p) return {};
   return {
-    title: `${p.name} in New Jersey`,
+    title: seoTitle(`${p.name} in New Jersey`),
     description: p.intro,
   };
 }

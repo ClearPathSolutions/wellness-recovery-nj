@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
-import { site, widgets } from '@/lib/site';
+import { site, widgets, TITLE_SUFFIX } from '@/lib/site';
 import {
   editorialPolicyReady,
   EDITORIAL_POLICY_URL,
@@ -29,8 +29,9 @@ const sans = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Addiction & Mental Health Rehab`,
-    template: `%s | ${site.shortName}`,
+    // 64 chars; the full legal name made this 72 (Semrush: title too long).
+    default: 'Wellness Recovery Center of NJ | Addiction & Mental Health Rehab',
+    template: `%s${TITLE_SUFFIX}`,
   },
   description: site.description,
   keywords: [

@@ -6,6 +6,7 @@ import { teamBioPages, getTeamMember, CANONICAL_AT_PARENT } from '@/lib/content'
 import { Container, SectionHeading, Icon } from '@/components/ui';
 import { InsuranceStrip, CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
+import { seoTitle } from '@/lib/site';
 
 export function generateStaticParams() {
   return teamBioPages.map((m) => ({ slug: m.slug }));
@@ -20,7 +21,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const canonical = CANONICAL_AT_PARENT[params.slug];
 
   return {
-    title: `${m.name} — ${m.role}`,
+    title: seoTitle(`${m.name} — ${m.role}`),
     description: m.bio?.[0],
     ...(canonical ? { alternates: { canonical } } : {}),
   };
@@ -100,6 +101,19 @@ export default function TeamMemberPage({ params }: { params: { slug: string } })
               intro="Experienced, credentialed, and deeply committed to your recovery."
             />
           </div>
+          {/* Every other bio by name, so no bio depends on a single inbound link. */}
+          <ul className="reveal mx-auto mt-10 grid max-w-5xl gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+            {teamBioPages
+              .filter((o) => o.slug !== member.slug)
+              .map((o) => (
+                <li key={o.slug}>
+                  <Link href={`/about/${o.slug}`} className="font-semibold text-ink-900 hover:text-clay-700">
+                    {o.name}
+                  </Link>
+                  <span className="block text-sm text-ink-600">{o.role}</span>
+                </li>
+              ))}
+          </ul>
           <div className="reveal mt-10 text-center">
             <Link href="/about" className="btn-primary">
               Who We Are

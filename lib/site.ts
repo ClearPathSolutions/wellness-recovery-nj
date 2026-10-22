@@ -6,7 +6,7 @@ export const site = {
   tagline: 'Private Substance Abuse & Mental Health Rehab in New Jersey',
   description:
     'Wellness Recovery Center of New Jersey is a state-of-the-art, accredited addiction and mental health treatment center in West Windsor, NJ offering personalized, evidence-based care for drug and alcohol abuse.',
-  url: 'https://wellnessrecoverynj.com',
+  url: 'https://www.wellnessrecoverynj.com',
   phone: '(866) 861-3449',
   phoneHref: 'tel:+18668613449',
   email: 'info@wellnessrecoverynj.com',
@@ -31,6 +31,23 @@ export const site = {
 
 // Third-party widget & tracking config — the only per-site values that change.
 // See the Clarion + Tracking playbook for the full setup.
+/** The title template's suffix, as applied in app/layout.tsx. */
+export const TITLE_SUFFIX = ` | ${site.shortName}`;
+/** Semrush (and most SERPs) treat anything past ~70 characters as too long. */
+export const MAX_TITLE = 70;
+
+/**
+ * A page title that keeps the brand suffix only when it fits.
+ *
+ * The layout template appends " | Wellness Recovery Center" (26 chars) to every
+ * page, which pushed 17 titles past 70 characters. When title + suffix would be
+ * too long the suffix is dropped (`absolute` bypasses the template); the page's
+ * own words matter more in the SERP than the brand repeated at the end.
+ */
+export function seoTitle(title: string): string | { absolute: string } {
+  return title.length + TITLE_SUFFIX.length <= MAX_TITLE ? title : { absolute: title };
+}
+
 export const widgets = {
   clarion: {
     // Public half of the key: the chat widget and blog feed both run in the
