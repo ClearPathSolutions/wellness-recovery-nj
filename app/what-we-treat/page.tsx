@@ -6,6 +6,7 @@ import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/what-we-treat' },
   title: 'What We Treat',
   description:
     'Expert, judgment-free treatment for alcohol, opioids, benzodiazepines, cocaine, heroin, fentanyl, meth, oxycodone, prescription drugs, and Xanax addiction in New Jersey.',

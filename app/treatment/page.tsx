@@ -7,6 +7,7 @@ import { InsuranceStrip, CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/treatment' },
   title: 'Treatment Programs',
   description:
     'Explore our full continuum of outpatient addiction and mental health treatment in New Jersey — PHP, IOP, Outpatient, Mental Health IOP, and Dual Diagnosis care.',

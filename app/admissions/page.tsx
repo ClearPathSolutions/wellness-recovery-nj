@@ -7,6 +7,7 @@ import PageHero from '@/components/PageHero';
 import { InsuranceForm } from '@/components/Forms';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/admissions' },
   title: 'Admissions & Insurance',
   description:
     'Navigating insurance should never be a barrier to care. Verify your benefits for free — we work with most major private and commercial insurance carriers on an out-of-network basis.',

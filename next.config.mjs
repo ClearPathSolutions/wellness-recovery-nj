@@ -136,6 +136,24 @@ const nextConfig = {
       // Areas: singular -> plural, preserving the county slug
       { source: '/area-we-serve', destination: '/areas-we-serve', permanent: true },
       { source: '/area-we-serve/:slug', destination: '/areas-we-serve/:slug', permanent: true },
+      // Old WordPress landing pages and archives (SEO 86e3ptqxw). Every destination is a live,
+      // sitemap-listed page. WordPress paths ended in a slash: Next strips it with its own 308 first
+      // (same as the existing /contact-us rule), so an old URL is at most two hops.
+      // This site is outpatient only (PHP / IOP / Outpatient), so the inpatient and detox
+      // landing pages go to the programs that actually exist, not to a page that claims otherwise.
+      { source: '/drug-alcohol-addiction-rehab', destination: '/what-we-treat', permanent: true },
+      { source: '/drug-alcohol-detox-rehab', destination: '/treatment', permanent: true },
+      { source: '/inpatient-rehab-center', destination: '/treatment/partial-hospitalization', permanent: true },
+      { source: '/mental-health-iop', destination: '/treatment/mental-health-iop', permanent: true },
+      { source: '/virtual-online-rehab-new-jersey', destination: '/treatment/intensive-outpatient-program', permanent: true },
+      // Topic tags that map cleanly onto a page; everything else under /tag and /category is
+      // an archive of blog excerpts and goes to the blog index.
+      { source: '/tag/dual-diagnosis', destination: '/treatment/dual-diagnosis', permanent: true },
+      { source: '/tag/intensive-outpatient', destination: '/treatment/intensive-outpatient-program', permanent: true },
+      { source: '/tag/:slug(addiction-and-relationships|family|relationships)', destination: '/blog/how-addiction-affects-families-and-relationships', permanent: true },
+      { source: '/category/for-families', destination: '/blog/how-addiction-affects-families-and-relationships', permanent: true },
+      { source: '/tag/:path*', destination: '/blog', permanent: true },
+      { source: '/category/:path*', destination: '/blog', permanent: true },
       // Renamed pages
       { source: '/contact-us', destination: '/contact', permanent: true },
       { source: '/faq-page', destination: '/faq', permanent: true },

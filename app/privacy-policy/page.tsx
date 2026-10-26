@@ -4,6 +4,7 @@ import { Container } from '@/components/ui';
 import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/privacy-policy' },
   title: 'Privacy Policy',
   description: 'How Wellness Recovery Center of New Jersey collects, uses, and protects your information.',
 };

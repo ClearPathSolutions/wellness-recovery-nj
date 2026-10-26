@@ -13,7 +13,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const a = getAddiction(params.slug);
   if (!a) return {};
-  return { title: a.h1, description: a.intro };
+  return {
+    title: a.h1,
+    description: a.intro,
+    alternates: { canonical: `/what-we-treat/${params.slug}` },
+  };
 }
 
 export default function AddictionPage({ params }: { params: { slug: string } }) {

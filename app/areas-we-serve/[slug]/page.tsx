@@ -17,6 +17,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   return {
     title: `${a.county} Drug & Alcohol Rehab`,
     description: a.intro,
+    alternates: { canonical: `/areas-we-serve/${params.slug}` },
   };
 }
 

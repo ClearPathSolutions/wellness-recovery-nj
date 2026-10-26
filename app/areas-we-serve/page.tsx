@@ -6,6 +6,7 @@ import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/areas-we-serve' },
   title: 'Areas We Serve',
   description:
     'From our West Windsor facility, Wellness Recovery Center serves communities across central and northern New Jersey — Mercer, Hunterdon, Somerset, Morris, Sussex, and Warren counties.',

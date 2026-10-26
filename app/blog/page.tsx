@@ -11,6 +11,7 @@ import PageHero from '@/components/PageHero';
 export const revalidate = 600;
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/blog' },
   title: 'Blog & Articles',
   description:
     'Insights on addiction, recovery, and mental health from the team at Wellness Recovery Center of New Jersey.',

@@ -6,6 +6,7 @@ import PageHero from '@/components/PageHero';
 import { ContactForm } from '@/components/Forms';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/contact' },
   title: 'Contact Us',
   description:
     'Get in touch with Wellness Recovery Center of New Jersey. Same-day admissions, transportation available, and 24/7 help and support. Call (866) 861-3449.',
