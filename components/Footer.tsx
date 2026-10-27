@@ -141,6 +141,9 @@ export default function Footer() {
                 Editorial Policy
               </Link>
             )}
+            <Link href="/terms-of-service" className="hover:text-clay-300">
+              Terms of Service
+            </Link>
             <ul className="flex items-center gap-2">
               {socialLinks.map((s) => (
                 <li key={s.label}>

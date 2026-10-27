@@ -10,7 +10,7 @@ import { site } from '@/lib/site';
  * merge fields below differ per site. When the master copy changes, replace the
  * file wholesale.
  */
-export type LegalPage = 'privacy-policy' | 'notice-of-privacy-practices' | 'sms-terms';
+export type LegalPage = 'privacy-policy' | 'notice-of-privacy-practices' | 'sms-terms' | 'terms-of-service';
 
 export const LEGAL_DATE = 'October 27, 2026';
 
@@ -22,12 +22,14 @@ const fields: Record<string, string> = {
   DOMAIN: new URL(site.url).hostname.replace(/^www\./, ''),
   PHONE: `<a href="${site.phoneHref}">${escapeHtml(site.phone)}</a>`,
   PRIVACY_EMAIL: `<a href="${site.emailHref}">${escapeHtml(site.email)}</a>`,
+  CONTACT_EMAIL: `<a href="${site.emailHref}">${escapeHtml(site.email)}</a>`,
   STREET_ADDRESS: escapeHtml(site.address.full),
   LEGAL_ENTITY_LINE: '',
   STATE_NAME: 'New Jersey',
   PP_LAST_UPDATED: LEGAL_DATE,
   SMS_LAST_UPDATED: LEGAL_DATE,
   NPP_EFFECTIVE_DATE: LEGAL_DATE,
+  TOS_EFFECTIVE_DATE: LEGAL_DATE,
 };
 
 /** The page body with merge fields filled, read at build time. */
@@ -37,7 +39,7 @@ export function legalPageBody(page: LegalPage): string {
     // Header comment is dev notes, not page content.
     .replace(/<!--[\s\S]*?-->/g, '')
     // The site's routes have no trailing slash.
-    .replace(/href="\/(privacy-policy|notice-of-privacy-practices|sms-terms)\/"/g, 'href="/$1"')
+    .replace(/href="\/(privacy-policy|notice-of-privacy-practices|sms-terms|terms-of-service)\/"/g, 'href="/$1"')
     .replace(/\{\{([A-Z_]+)\}\}/g, (token, name: string) => (name in fields ? fields[name] : token))
     .trim();
 
