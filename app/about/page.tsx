@@ -9,6 +9,7 @@ import PageHero from '@/components/PageHero';
 import { editorialPolicyServed, EDITORIAL_POLICY_PATH } from '@/lib/editorial';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/about' },
   title: 'Who We Are',
   description:
     'Wellness Recovery Center of New Jersey is an addiction treatment center rooted in client-centered care. Learn about our mission, values, and expert clinical team.',

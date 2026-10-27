@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { site } from '@/lib/site';
@@ -16,6 +17,11 @@ import { InsuranceStrip, CtaBand, TrustRow } from '@/components/sections';
 import Reviews from '@/components/Reviews';
 
 export const revalidate = 600;
+
+// The layout supplies the title and description; the homepage only needs its own canonical.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default function HomePage() {
   return (

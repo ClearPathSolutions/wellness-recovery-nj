@@ -18,6 +18,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   return {
     title: seoTitle(`${p.name} in New Jersey`),
     description: p.intro,
+    alternates: { canonical: `/treatment/${params.slug}` },
   };
 }
 

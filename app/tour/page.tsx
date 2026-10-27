@@ -6,6 +6,7 @@ import { CtaBand } from '@/components/sections';
 import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/tour' },
   title: 'Tour Our Facilities',
   description:
     'Take a tour of Wellness Recovery Center of New Jersey — a modern, secluded, and innovative treatment facility in West Windsor, NJ designed for comfort and healing.',

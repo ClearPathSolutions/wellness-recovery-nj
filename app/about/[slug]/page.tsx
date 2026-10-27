@@ -23,7 +23,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   return {
     title: seoTitle(`${m.name} — ${m.role}`),
     description: m.bio?.[0],
-    ...(canonical ? { alternates: { canonical } } : {}),
+    alternates: { canonical: canonical ?? `/about/${params.slug}` },
   };
 }
 

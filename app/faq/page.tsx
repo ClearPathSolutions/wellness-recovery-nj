@@ -6,6 +6,7 @@ import PageHero from '@/components/PageHero';
 import Accordion from '@/components/Accordion';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/faq' },
   title: 'Frequently Asked Questions',
   description:
     'Answers to common questions about treatment, insurance, admissions, and what to expect at Wellness Recovery Center of New Jersey.',
