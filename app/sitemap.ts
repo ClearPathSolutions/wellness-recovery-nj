@@ -23,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/blog',
     '/faq',
     '/privacy-policy',
+    '/notice-of-privacy-practices',
+    '/sms-terms',
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: now,

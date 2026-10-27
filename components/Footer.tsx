@@ -125,9 +125,15 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container flex flex-col items-center justify-between gap-4 py-6 text-xs text-cream/60 sm:flex-row">
           <p>© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
             <Link href="/privacy-policy" className="hover:text-clay-300">
               Privacy Policy
+            </Link>
+            <Link href="/notice-of-privacy-practices" className="hover:text-clay-300">
+              Notice of Privacy Practices
+            </Link>
+            <Link href="/sms-terms" className="hover:text-clay-300">
+              SMS Terms
             </Link>
             {/* Linked only where the policy is served, so production never links a 404. */}
             {editorialPolicyServed && (
