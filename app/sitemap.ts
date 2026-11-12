@@ -3,13 +3,21 @@ import { site } from '@/lib/site';
 import { programs } from '@/lib/programs';
 import { addictions } from '@/lib/addictions';
 import { areas } from '@/lib/areas';
-import { blogPosts } from '@/lib/blog';
+import { getMergedPosts } from '@/lib/clarion-blog';
 import { teamBioPages, CANONICAL_AT_PARENT } from '@/lib/content';
 import { editorialPolicyReady, EDITORIAL_POLICY_PATH } from '@/lib/editorial';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Rendered per request. A static sitemap is frozen at deploy on Vercel, so
+// Clarion posts published afterwards would never appear. The Clarion feed
+// fetch keeps its own 10-minute cache (lib/clarion-blog.ts).
+export const dynamic = 'force-dynamic';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = site.url;
   const now = new Date();
+  // Local posts plus Clarion posts; /blog lists both, so the sitemap must too.
+  const posts = await getMergedPosts();
+  const postSlugs = Array.from(new Set(posts.map((p) => p.slug)));
 
   const staticRoutes = [
     '',
@@ -37,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...programs.map((p) => `/treatment/${p.slug}`),
     ...addictions.map((a) => `/what-we-treat/${a.slug}`),
     ...areas.map((a) => `/areas-we-serve/${a.slug}`),
-    ...blogPosts.map((p) => `/blog/${p.slug}`),
+    ...postSlugs.map((slug) => `/blog/${slug}`),
     // Team bios, minus anyone whose canonical points at the parent network —
     // a sitemap should only list URLs that are canonical to this site.
     ...teamBioPages

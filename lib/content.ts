@@ -169,7 +169,7 @@ export const insuranceCarriers = [
 ];
 
 // Additional carriers named across program pages (text-only)
-export const additionalCarriers = ['Cigna', 'Aetna', 'Wellmark BCBS', 'UMR', 'Surest'];
+export const additionalCarriers = ['Cigna', 'Aetna', 'UMR', 'Surest'];
 
 export const accreditations = [
   { name: 'The Joint Commission', logo: '/images/accreditation/joint-commission.png' },
