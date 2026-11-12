@@ -18,6 +18,10 @@ function PersonName({ person, rel }: { person: BylinePerson; rel?: string }) {
     <Link href={person.bioPath} rel={rel}>
       {label}
     </Link>
+  ) : person.url ? (
+    <a href={person.url} target="_blank" rel={[rel, 'noopener noreferrer'].filter(Boolean).join(' ')}>
+      {label}
+    </a>
   ) : (
     <>{label}</>
   );
@@ -25,8 +29,8 @@ function PersonName({ person, rel }: { person: BylinePerson; rel?: string }) {
 
 /**
  * Article byline, from the editorial policy package's templates/article-byline.html.
- * Sits directly under the post's H1. Each line renders only when its data
- * exists; getByline() has already dropped a reviewer that has no review date.
+ * Sits directly under the post's H1. The reviewer line always renders
+ * (getByline() supplies the site default); the others only when their data exists.
  */
 export default function ArticleByline({ byline }: { byline: Byline }) {
   const { author, reviewer, lastReviewed, modified } = byline;
@@ -49,8 +53,6 @@ export default function ArticleByline({ byline }: { byline: Byline }) {
     ),
   ].filter(Boolean);
 
-  if (!author && meta.length === 0) return null;
-
   return (
     <div className="article-byline">
       {author && (
@@ -58,11 +60,9 @@ export default function ArticleByline({ byline }: { byline: Byline }) {
           Written by <PersonName person={author} rel="author" />
         </p>
       )}
-      {reviewer && (
-        <p className="byline-line">
-          Clinically reviewed by <PersonName person={reviewer} />
-        </p>
-      )}
+      <p className="byline-line">
+        Medically reviewed by <PersonName person={reviewer} />
+      </p>
       {meta.length > 0 && (
         <p className="byline-meta">{meta.flatMap((m, i) => (i === 0 ? [m] : [' · ', m]))}</p>
       )}

@@ -22,6 +22,9 @@ type FeedPost = {
   author_name: string;
   published_at: string; // ISO
   seo_meta?: { title?: string; description?: string };
+  medically_reviewed_by?: string | null;
+  medically_reviewed_by_credentials?: string | null;
+  medically_reviewed_by_url?: string | null;
 };
 type FeedResponse = { posts?: FeedPost[]; next_cursor?: string | null };
 type PostDetail = FeedPost & { body_html: string };
@@ -135,6 +138,14 @@ function withReferenceIds(html: string): string {
   return html.slice(0, start) + list + html.slice(end);
 }
 
+/**
+ * Drop a "Medically reviewed by" paragraph from the body: the byline above the
+ * article always names the reviewer, so a copy in the body would show it twice.
+ */
+function withoutReviewerLine(html: string): string {
+  return html.replace(/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?medically\s+reviewed\s+by(?:(?!<\/p>)[\s\S])*?<\/p>\s*/gi, '');
+}
+
 function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
   return {
     slug: p.slug,
@@ -147,7 +158,10 @@ function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
     excerpt: p.excerpt,
     body: [],
     source: 'clarion',
-    bodyHtml: bodyHtml ? withReferenceIds(withHeadingIds(bodyHtml)) : bodyHtml,
+    bodyHtml: bodyHtml ? withReferenceIds(withHeadingIds(withoutReviewerLine(bodyHtml))) : bodyHtml,
+    reviewerName: p.medically_reviewed_by?.trim() || undefined,
+    reviewerCredentials: p.medically_reviewed_by_credentials?.trim() || undefined,
+    reviewerUrl: p.medically_reviewed_by_url?.trim() || undefined,
   };
 }
 

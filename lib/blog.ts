@@ -18,13 +18,22 @@ export type BlogPost = {
    *
    * writtenBy / reviewedBy are team slugs (the part after /about/), so the
    * name links to that person's bio page; an unknown slug fails the build.
-   * Without writtenBy the byline falls back to `author` above. There is never a
-   * site-wide default reviewer: no reviewedBy + lastReviewed, no reviewer line.
+   * Without writtenBy the byline falls back to `author` above. Every post shows
+   * a medical reviewer: reviewedBy when set, otherwise the Clarion reviewer
+   * fields below, with any missing piece filled from the site default (see
+   * DEFAULT_REVIEWER in lib/byline.ts). lastReviewed is shown only when set.
    */
   writtenBy?: string;
   reviewedBy?: string;
   /** YYYY-MM-DD. */
   lastReviewed?: string;
+  /**
+   * Clarion's medically_reviewed_by / _credentials / _url, kept as given.
+   * Unset on local posts; any blank field falls back to the site default.
+   */
+  reviewerName?: string;
+  reviewerCredentials?: string;
+  reviewerUrl?: string;
 };
 
 /**
