@@ -51,8 +51,9 @@ export const getTeamMember = (slug: string) => teamMembers.find((m) => m.slug ==
 // quadranthealthgroup.com and on every other facility site in the group. Without
 // a canonical pointing home, a dozen near-identical pages compete with each other
 // in search. Keyed by slug so only the people listed here are affected.
+// Dr. Pamela Tambini is deliberately not here: every blog post's medical-reviewer
+// byline links to her bio, so it must be self-canonical on this domain.
 export const CANONICAL_AT_PARENT: Record<string, string> = {
-  'pamela-tambini': 'https://www.quadranthealthgroup.com/team/pamela-tambini/',
   'casey-hyatt': 'https://www.quadranthealthgroup.com/team/casey-hyatt/',
 };
 
