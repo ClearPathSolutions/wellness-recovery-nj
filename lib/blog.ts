@@ -6,6 +6,8 @@ export type BlogPost = {
   author: string;
   category: string;
   image: string;
+  /** Alt text for `image`: the Clarion author's when set. Callers use `imageAlt || title`. */
+  imageAlt?: string;
   excerpt: string;
   body: string[];
   // Set on posts sourced from the Clarion feed. bodyHtml holds the rendered

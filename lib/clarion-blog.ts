@@ -7,10 +7,33 @@
 // posts server-rendered and SEO-crawlable, and lets them share the site's own
 // card + article UI instead of the vendor's embed markup.
 
-import { widgets } from './site';
+import { widgets, site } from './site';
 import { blogPosts, type BlogPost } from './blog';
 
 const { clarion } = widgets;
+/**
+ * Blog images on this site's own domain. Clarion hands out
+ * `https://api.clarionlabs.ai/blog/public/image/<key>` (or, once it is told this
+ * site proxies images, `https://www.wellnessrecoverynj.com/blog-images/<key>`);
+ * both become `/blog-images/<key>`, which next.config.mjs rewrites to Clarion's
+ * bytes route. The address a visitor, Google Images or a social card sees is
+ * this site's; the bytes are the same, with no redirect.
+ */
+const IMAGE_PATH = '/blog-images';
+const CLARION_IMAGE = `${clarion.api}/blog/public/image/`;
+const OWN_IMAGE = new RegExp(
+  `^https://(?:www\\.)?${new URL(site.url).hostname.replace(/^www\./, '').replace(/\./g, '\\.')}(?=${IMAGE_PATH}/)`,
+);
+
+export function onSiteImage(src: string): string {
+  if (src.startsWith(CLARION_IMAGE)) return `${IMAGE_PATH}/${src.slice(CLARION_IMAGE.length)}`;
+  return src.replace(OWN_IMAGE, '');
+}
+
+function onSiteImages(html: string): string {
+  return html.split(CLARION_IMAGE).join(`${IMAGE_PATH}/`);
+}
+
 const REVALIDATE = 600; // re-check Clarion at most every 10 minutes
 const CLARION_CATEGORY = 'Recovery'; // the feed carries no category; sensible default
 
@@ -19,6 +42,7 @@ type FeedPost = {
   title: string;
   excerpt: string;
   cover_image_url: string;
+  cover_image_alt?: string | null;
   author_name: string;
   published_at: string; // ISO
   seo_meta?: { title?: string; description?: string };
@@ -154,11 +178,12 @@ function toBlogPost(p: FeedPost, bodyHtml?: string): BlogPost {
     displayDate: displayDate(p.published_at),
     author: p.author_name || '',
     category: CLARION_CATEGORY,
-    image: p.cover_image_url,
+    image: onSiteImage(p.cover_image_url),
+    imageAlt: p.cover_image_alt?.trim() || undefined,
     excerpt: p.excerpt,
     body: [],
     source: 'clarion',
-    bodyHtml: bodyHtml ? withReferenceIds(withHeadingIds(withoutReviewerLine(bodyHtml))) : bodyHtml,
+    bodyHtml: bodyHtml ? withReferenceIds(withHeadingIds(withoutReviewerLine(onSiteImages(bodyHtml)))) : bodyHtml,
     reviewerName: p.medically_reviewed_by?.trim() || undefined,
     reviewerCredentials: p.medically_reviewed_by_credentials?.trim() || undefined,
     reviewerUrl: p.medically_reviewed_by_url?.trim() || undefined,

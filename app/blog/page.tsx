@@ -42,7 +42,7 @@ export default async function BlogPage() {
             >
               <Image
                 src={featured.image}
-                alt={featured.title}
+                alt={featured.imageAlt || featured.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className={`${coverFit(featured.source).image} transition-transform duration-500 group-hover:scale-105`}
@@ -79,7 +79,7 @@ export default async function BlogPage() {
                 >
                   <Image
                     src={post.image}
-                    alt={post.title}
+                    alt={post.imageAlt || post.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 176px"
                     className={`${coverFit(post.source).image} transition-transform duration-500 group-hover:scale-105`}
