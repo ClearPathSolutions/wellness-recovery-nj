@@ -10,6 +10,8 @@
  * outage must degrade attribution, never block a submission.
  */
 
+import { latestReferrer, rememberReferrer } from './latest-referrer';
+
 declare global {
   interface Window {
     __ctm?: {
@@ -257,6 +259,7 @@ export function getSession(): VisitSession | null {
 export function recordPageview(): void {
   if (typeof window === 'undefined') return;
   try {
+    rememberReferrer();
     captureAttribution();
     touchSession();
   } catch {
@@ -349,7 +352,7 @@ function attributionPayload() {
     page_url: window.location.href,
     // The real entry page with its campaign on it, not wherever the form sits.
     landing_page_url: stored.landing_page || window.location.href,
-    referrer: stored.referrer || null,
+    referrer: latestReferrer() ?? (stored.referrer || null),
     utm: Object.keys(utm).length ? utm : null,
     // wbraid / gbraid are what Google substitutes for gclid under iOS and
     // consent mode. CTM's own routing rules key on all three, so a lead that
