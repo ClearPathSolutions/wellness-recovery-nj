@@ -551,7 +551,7 @@ async function BlogSection() {
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={post.image}
-                  alt={post.title}
+                  alt={post.imageAlt || post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"

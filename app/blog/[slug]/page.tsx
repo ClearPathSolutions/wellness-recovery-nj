@@ -91,7 +91,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         >
           <Image
             src={post.image}
-            alt={post.title}
+            alt={post.imageAlt || post.title}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 >
                   <Image
                     src={p.image}
-                    alt={p.title}
+                    alt={p.imageAlt || p.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 176px"
                     className={`${coverFit(p.source).image} transition-transform duration-500 group-hover:scale-105`}
